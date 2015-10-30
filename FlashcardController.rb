@@ -7,8 +7,9 @@ class FlashcardController
     @deck = FlashcardDeck.new
     @completed_deck = FlashcardDeck.new
     @view = FlashcardView.new
+    filename = ARGV.any? ? ARGV[0] : 'flashcard_samples.txt'
     view.open_prompt
-    load_deck('flashcard_samples.txt')
+    load_deck(filename)
     run_deck
     run_repeat
   end
@@ -44,6 +45,7 @@ end
         completed_deck.add_card(card)
       else
         view.prompt_incorrect
+        view.prompt_show_correct_answer(card.answer)
       end
       card.attempts += 1
       view.show_attempts(card.attempts)
