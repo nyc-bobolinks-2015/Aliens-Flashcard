@@ -1,7 +1,7 @@
 class FlashcardView
 
   def open_prompt
-    display("Welcome to Flashcards! Let's get started learning!")
+    display("Welcome to Flashcards! Let's get started learning!\n\n")
   end
 
   def display(output)
@@ -9,24 +9,43 @@ class FlashcardView
   end
 
   def show_definition(input)
-    puts input
+    display(input + "\n\n")
   end
 
   def ask_for_answer
-    puts "What is your answer?"
+    print "Guess: "
     get_input
   end
 
-  def get_input
-    input = gets.chomp
+  def display_answer(answer)
+    display("The correct answer was: #{answer}.")
   end
 
-  def prompt_try_again
-    puts "Try again"
+  def get_input
+    input = STDIN.gets.chomp
   end
 
   def prompt_correct
-    puts "That's correct! Nice job!"
+    display("That's correct! Nice job!\n\n")
   end
 
+  def prompt_incorrect
+    display("\nIncorrect Guess")
+  end
+
+  def prompt_completed_deck
+    display("You completed the deck! Good work genius!")
+  end
+
+  def prompt_next_card
+    display("-----Next card-----\n\n")
+  end
+
+  def prompt_card_attempts(input)
+    display("Attempts: #{input}\n\n")
+  end
+
+  def prompt_repeat_deck
+    display("There were a few flashcards you need to work on. Let's try those again.\n-------\n")
+  end
 end
