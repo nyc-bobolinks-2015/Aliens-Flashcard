@@ -1,4 +1,4 @@
-Opens a library, or module, within a Ruby Stream.
+Opens a library, "or" module, within a Ruby Stream.
 module
 
 Bumps an iterator, or a while or until block, to the next iteration, unconditionally and without executing whatever may remain of the block.
