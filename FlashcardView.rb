@@ -9,7 +9,7 @@ class FlashcardView
   end
 
   def show_definition(input)
-    display(input + "\n")
+    display(input + "\n\n")
   end
 
   def ask_for_answer
@@ -26,11 +26,11 @@ class FlashcardView
   end
 
   def prompt_correct
-    display("That's correct! Nice job!\n\n")
+    display("That's correct! Nice job!\n")
   end
 
   def prompt_incorrect
-    display("\n\nIncorrect")
+    display("\nIncorrect")
   end
 
   def prompt_next_card
@@ -38,14 +38,18 @@ class FlashcardView
   end
 
   def prompt_completed
-    display("You completed the deck! Nice work genius!")
+    display("You completed the deck! Nice work genius!\n\n")
   end
 
   def show_attempts(input)
-    display("Attempts: #{input}")
+    display("Attempts: #{input}\n\n")
   end
 
   def prompt_run_repeat
-    display("You have a few cards that you need to work on. Let's try again.")
+    display("You have a few cards that you need to work on. Let's try again.\n\n")
+  end
+
+  def prompt_show_correct_answer(input)
+    display("The correct answer was: #{input}")
   end
 end
