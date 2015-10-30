@@ -2,44 +2,61 @@ require_relative 'flashcard'
 require_relative 'flashcardview'
 
 class FlashcardController
-  attr_reader :view
+  attr_reader :view, :deck, :completed_deck
   def initialize
     @deck = FlashcardDeck.new
+    @completed_deck = FlashcardDeck.new
     @view = FlashcardView.new
+    view.open_prompt
+    load_deck('flashcard_samples.txt')
     run_deck
+    run_repeat
   end
 
   def load_deck(filename)
   counter = 1
   args = {}
-  File.foreach(filename, col_sep: "\n") do |csv_line|
-
-    if counter == 1
-      args[:definition] = csv_line.chomp
+  File.foreach(filename) do |csv_line|
+    row = csv_line.chomp
+    if counter == 1 &&  csv_line != "\n"
+      args[:definition] = row
       counter += 1
     elsif counter == 2
-      args[:answer] = csv_line.chomp
-      counter += 1
-    elsif counter == 3
+      args[:answer] = row
       counter = 1
       card = Flashcard.new(args)
-      @deck.add_card(card)
+      deck.add_card(card)
     end
 
   end
 end
 
   def run_deck
-    view.open_prompt
-    load_deck('flashcard_samples_redux.txt')
-    @deck.flashcards.each do |card|
+
+    until deck.is_empty?
+      view.prompt_next_card
+      card = deck.pick_a_card
       view.show_definition(card.definition)
       answer = view.ask_for_answer
-      until check_answer?(answer, card.answer)
-        view.prompt_try_again
-        answer = view.ask_for_answer
+      if check_answer?(answer, card.answer)
+        view.prompt_correct
+        deck.remove_card(card)
+        completed_deck.add_card(card)
+      else
+        view.prompt_incorrect
       end
-      go_to_next_card
+      card.attempts += 1
+      view.show_attempts(card.attempts)
+    end
+    view.prompt_completed
+  end
+
+  def run_repeat
+    deck.flashcards = completed_deck.flashcards.select {|card| card.attempts >= 3}
+
+    if !deck.is_empty?
+      view.prompt_run_repeat
+      run_deck
     end
   end
 
