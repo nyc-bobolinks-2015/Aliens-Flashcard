@@ -33,15 +33,26 @@ class FlashcardController
   end
 
   def load_deck(filename)
-    CSV.foreach(filename, headers: true, col_sep: "$", header_converters: :symbol) do |row|
-      card = Flashcard.new(row)
+  counter = 1
+  args = {}
+  File.foreach(filename, col_sep: "\n") do |csv_line|
+    if counter == 1
+      args[:definition] = csv_line.chomp
+      counter += 1
+    elsif counter == 2
+      args[:answer] = csv_line.chomp
+      counter += 1
+    elsif counter == 3
+      counter = 1
+      card = Flashcard.new(args)
       @deck.add_card(card)
     end
   end
+end
 
   def run_deck
     view.open_prompt
-    load_deck('flashcard_samples.txt')
+    load_deck('flashcard_samples_redux.txt')
     @deck.flashcards.each do |card|
       view.show_definition(card.definition)
       answer = view.ask_for_answer
