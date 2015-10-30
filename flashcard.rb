@@ -46,7 +46,8 @@ class FlashcardController
       view.show_definition(card.definition)
       answer = view.ask_for_answer
       until check_answer?(answer, card.answer)
-        answer = try_again
+        view.prompt_try_again
+        answer = view.ask_for_answer
       end
       go_to_next_card
     end
@@ -60,10 +61,6 @@ class FlashcardController
     view.prompt_correct
   end
 
-  def try_again
-     view.prompt_try_again
-     view.ask_for_answer
-  end
 end
 
 class FlashcardView
@@ -91,7 +88,6 @@ class FlashcardView
 
   def prompt_try_again
     puts "Try again"
-    get_input
   end
 
   def prompt_correct
